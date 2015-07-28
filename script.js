@@ -1,25 +1,23 @@
-$(document).ready(function(){
-	var $rows = $(".product");
-	$(".form-control").keyup(function(e){
-		var key = $(this).val();
-		var val = $.trim(key).replace(/ +/g, ' ').toLowerCase();
-		$rows.each(function(index, el) {
-			var text = $(el).find(".name").text().replace(/\s+/g, ' ').toLowerCase(),
-			    start = text.indexOf(val),
-			    m = $(el).find(".name").text();
-			$(el).find(".name").remove();
-			if(start != -1){
-			  var text1 = m.substr(0,start),
-			      text2 = m.substr(start + key.length, m.length);
-			  $(el).find(".search-highlight").remove();
-			  var div = '<div class="name">' + text1 + '<span class="search-highlight">'+ key + '</span>' + text2 + '</div>';
-			  $(el).find(".product-description").prepend(div);
-			  $(el).show(400);
-			} else {
-			  var div = '<div class="name">' + m + '</div>';
-			  $(el).find(".product-description").prepend(div);
-			  $(el).hide(400);
-			}
-		});
-	});
+$(document).ready(function() {
+  var $items = $(".product");
+  $(".form-control").keyup(function(e) {
+    var textSearch = $(this).val(),
+    		textSearchTrim = $.trim(textSearch).replace(/ +/g, ' ').toLowerCase();
+    $items.each(function(index, el) {
+      var textItem = $(el).find(".name").text(),
+      		textItemTrim = textItem.replace(/\s+/g, ' ').toLowerCase(),
+		      textIndex = textItemTrim.indexOf(textSearchTrim),
+		      newTextItem = textItem;
+      if (textIndex != -1) {
+        var textBeforeHighlight = textItem.substr(0, textIndex),
+        		textHighlight = textItem.substr(textIndex, textIndex + textSearchTrim.length);
+        		textAfterHighlight = textItem.substr(textIndex + textSearchTrim.length, textItem.length);
+        newTextItem = textBeforeHighlight + '<span class="search-highlight">' + textHighlight + '</span>' + textAfterHighlight;
+        $(el).show(400);
+      } else {
+        $(el).hide(400);
+      }
+      $(el).find(".name").html(newTextItem);
+    });
+  });
 });
